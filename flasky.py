@@ -94,8 +94,11 @@ def import_strepla(cid):
         list_strepla_contests()
         return
 
-    db.session.add(get_strepla_contest_all(cid))
-    db.session.commit()
+    try:
+        db.session.add(get_strepla_contest_all(cid))
+        db.session.commit()
+    except:
+        pass
 
 
 @app.cli.command()

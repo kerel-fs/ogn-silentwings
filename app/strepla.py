@@ -57,9 +57,16 @@ def get_strepla_contest_body(competition_id):
         contestant_url = "http://www.strepla.de/scs/ws/pilot.ashx?cmd=competitors&cId=" + str(competition_id) + "&cc=" + str(contest_class_row['name'])
         r = requests.get(contestant_url)
         contestant_data = json.loads(r.text.encode('utf-8'))
+
         if (len(contestant_data) == 0):
             print("Class name not recognized. Aborting.")
             return
+
+        if (contestant_data['msg'] ==  'No competitors for 481 found, please check access rights'):
+            print("""Error: StrePla doesn't provide the pilot info for this contest via the API."""
+                  """Please ask the contest owner to activate the respective setting on strepla"""
+                  """to make the pilot info available via api. This is a 'security' feature of StrePla.""")
+            raise Exception("access denied")
 
         for contestant_row in contestant_data:
             parameters = {'aircraft_model': contestant_row['glider_name'],
